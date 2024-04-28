@@ -51,8 +51,18 @@ public class AnimalRepository : IAnimalRepository
         _animals.Add(animal);
     }
     
+    public static void RemoveAnimal(Animal animal)
+    {
+        _animals.Remove(animal);
+    }
+    
     public IEnumerable<Animal> FetchAnimals()
     {
         return _animals;
+    }
+    
+    public static int getHighestId()
+    {
+        return _animals.Max(animal => animal.idAnimal);
     }
 }

@@ -42,7 +42,7 @@ public class AnimalsController : ControllerBase
     {
         var animal = new Animal
         {
-            idAnimal = animalDto.idAnimal,
+            idAnimal = AnimalRepository.getHighestId()+1,
             name = animalDto.name,
             description = animalDto.description,
             category = animalDto.category,
@@ -54,19 +54,33 @@ public class AnimalsController : ControllerBase
         return StatusCode(StatusCodes.Status201Created);
     }
     
-    // [HttpPut("{id:int}")]
-    // public IActionResult UpdateAnimal(int id, Animal animal)
-    // {
-    //     var animalToEdit = _animalRepository.FetchAnimals().FirstOrDefault(s => s.idAnimal == id);
-    //     
-    //     if (animalToEdit == null)
-    //     {
-    //         return NotFound($"Animal with id {id} was not found");
-    //     }
-    //     
-    //     // _animals.Remove(animalToEdit);
-    //     // _animals.Add(animal);
-    //     return NoContent();
-    // }
+    [HttpPut("{id:int}")]
+    public IActionResult UpdateAnimal(int id, Animal animal)
+    {
+        var animalToEdit = _animalRepository.FetchAnimals().FirstOrDefault(s => s.idAnimal == id);
+        
+        if (animalToEdit == null)
+        {
+            return NotFound($"Animal with id {id} was not found");
+        }
+        
+        AnimalRepository.RemoveAnimal(animalToEdit);
+        AnimalRepository.AddAnimal(animal);
+        return StatusCode(StatusCodes.Status200OK);
+    }
+    
+    [HttpDelete("{id:int}")]
+    public IActionResult DeleteAnimal(int id)
+    {
+        var animalToDelete = _animalRepository.FetchAnimals().FirstOrDefault(s => s.idAnimal == id);
+        
+        if (animalToDelete == null)
+        {
+            return NotFound($"Animal with id {id} was not found");
+        }
+        
+        AnimalRepository.RemoveAnimal(animalToDelete);
+        return StatusCode(StatusCodes.Status200OK);
+    }
     
 }
